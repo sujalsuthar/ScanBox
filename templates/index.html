@@ -1,0 +1,2585 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ScanBox - Enterprise Email Security Platform</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      /* Professional Corporate Color Scheme */
+      --bg-primary: #0f1419;
+      --bg-secondary: #1a1f2e;
+      --bg-card: #1e2433;
+      --bg-elevated: #242b3d;
+      --bg-input: #151b26;
+      
+      --text-primary: #f0f4f8;
+      --text-secondary: #9ba7b4;
+      --text-muted: #6c7a89;
+      
+      --accent-primary: #3b82f6;
+      --accent-primary-dark: #2563eb;
+      --accent-primary-light: #60a5fa;
+      --accent-secondary: #10b981;
+      --accent-tertiary: #8b5cf6;
+      
+      --border: #2a3441;
+      --border-bright: #3d4a5c;
+      --border-subtle: rgba(42, 52, 65, 0.6);
+      
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --info: #3b82f6;
+      
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+      --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+      --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.5);
+      --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.3);
+      
+      --status-safe: #10b981;
+      --status-warning: #f59e0b;
+      --status-danger: #ef4444;
+      
+      /* Compatibility aliases */
+      --primary: var(--accent-primary);
+      --primary-dark: var(--accent-primary-dark);
+      --cyber-primary: var(--accent-primary);
+      --cyber-primary-dark: var(--accent-primary-dark);
+      --cyber-secondary: var(--accent-secondary);
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      overflow-x: hidden;
+      font-weight: 400;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    @keyframes pulseGlow {
+      0%, 100% { opacity: 0.3; }
+      50% { opacity: 0.6; }
+    }
+
+    /* Sidebar Navigation */
+    .sidebar {
+      position: fixed;
+      left: 0;
+      top: 0;
+      width: 280px;
+      height: 100vh;
+      background: var(--bg-secondary);
+      border-right: 1px solid var(--border);
+      padding: 0;
+      overflow-y: auto;
+      z-index: 1000;
+      box-shadow: 2px 0 12px rgba(0, 0, 0, 0.2);
+    }
+
+    .sidebar-header {
+      padding: 28px 24px;
+      border-bottom: 1px solid var(--border);
+      background: var(--bg-card);
+      text-align: center;
+      position: relative;
+    }
+
+    .sidebar-logo {
+      font-size: 48px;
+      margin-bottom: 12px;
+      filter: drop-shadow(0 0 10px rgba(0, 255, 136, 0.6));
+      animation: logoFloat 3s ease-in-out infinite;
+    }
+
+    @keyframes logoFloat {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    .sidebar-title {
+      font-size: 16px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      color: var(--text-primary);
+      margin-top: 12px;
+    }
+
+    .nav-item {
+      padding: 12px 20px;
+      margin: 2px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 500;
+      font-size: 14px;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--text-secondary);
+      user-select: none;
+      position: relative;
+    }
+
+    .nav-item:hover {
+      background: var(--bg-card);
+      color: var(--text-primary);
+    }
+
+    .nav-item.active {
+      background: rgba(59, 130, 246, 0.1);
+      color: var(--accent-primary);
+      font-weight: 600;
+    }
+
+    .nav-item.active::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 3px;
+      height: 20px;
+      background: var(--accent-primary);
+      border-radius: 0 2px 2px 0;
+    }
+
+    .nav-icon {
+      font-size: 16px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 20px;
+    }
+
+    /* Main Content */
+    .main-content {
+      position: relative;
+      z-index: 1;
+      margin-left: 280px;
+      padding: 36px 40px;
+      min-height: 100vh;
+      animation: fadeIn 0.3s ease-out;
+      background: var(--bg-primary);
+    }
+
+    .container { 
+      max-width: 1400px; 
+      margin: 0 auto; 
+    }
+
+    /* Header Bar */
+    .header-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 32px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .header-title h1 {
+      font-size: 28px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin: 0 0 6px 0;
+      letter-spacing: -0.5px;
+    }
+
+    .header-subtitle {
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin: 0;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .user-email {
+      font-size: 14px;
+      color: var(--text-secondary);
+      padding: 8px 16px;
+      background: var(--bg-card);
+      border-radius: 6px;
+      border: 1px solid var(--border);
+    }
+
+    /* Tab Navigation - Hidden since we use sidebar */
+    .tab-navigation {
+      display: none;
+    }
+
+    /* Views */
+    .tab-view { 
+      display: none; 
+      animation: slideInUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .tab-view.active { display: block; }
+
+    @keyframes slideInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    /* Scan Form Card */
+    .scan-card {
+      background: var(--bg-card);
+      padding: 32px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      margin-bottom: 20px;
+      box-shadow: var(--shadow-sm);
+      animation: fadeIn 0.3s ease-out;
+      position: relative;
+      overflow: hidden;
+      transition: box-shadow 0.2s ease;
+    }
+
+    .scan-card:hover {
+      box-shadow: var(--shadow-md);
+    }
+
+    .scan-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(0, 255, 136, 0.1), transparent);
+      animation: shimmer 3s infinite;
+    }
+
+    @keyframes shimmer {
+      0% { left: -100%; }
+      50%, 100% { left: 100%; }
+    }
+
+    /* Loading Spinner */
+    .spinner {
+      display: inline-block;
+      width: 18px;
+      height: 18px;
+      border: 3px solid rgba(255, 255, 255, 0.2);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin-left: 8px;
+      vertical-align: middle;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .scan-header {
+      margin-bottom: 32px;
+      text-align: center;
+    }
+
+    .scan-title {
+      font-size: 28px;
+      font-weight: 800;
+      margin-bottom: 8px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      background: linear-gradient(135deg, var(--cyber-primary) 0%, var(--cyber-secondary) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      filter: drop-shadow(0 0 10px rgba(0, 255, 136, 0.3));
+    }
+
+    .scan-subtitle {
+      color: var(--text-secondary);
+      font-size: 14px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-bottom: 24px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+    }
+
+    label {
+      font-weight: 600;
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 12px 14px;
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text-primary);
+      font-size: 14px;
+      font-family: 'Inter', sans-serif;
+      transition: all 0.2s ease;
+      outline: none;
+    }
+
+    input:hover, select:hover {
+      border-color: var(--border-bright);
+    }
+
+    input:focus, select:focus {
+      border-color: var(--accent-primary);
+      background: var(--bg-card);
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+
+    input::placeholder {
+      color: var(--text-muted);
+      opacity: 0.6;
+    }
+
+    .button-group {
+      display: flex;
+      gap: 12px;
+      margin-top: 32px;
+    }
+
+    button {
+      padding: 12px 28px;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      position: relative;
+      font-family: 'Inter', sans-serif;
+    }
+
+    button:active {
+      transform: scale(0.98);
+    }
+
+    .btn-scan {
+      background: var(--accent-primary);
+      color: #ffffff;
+      flex: 1;
+    }
+
+    .btn-scan:hover {
+      background: var(--accent-primary-dark);
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+    }
+
+    .btn-scan:active {
+      transform: translateY(0) scale(0.98);
+    }
+
+    .btn-scan.loading {
+      opacity: 0.7;
+      pointer-events: none;
+    }
+
+    .btn-secondary {
+      background: var(--bg-elevated);
+      color: var(--text-primary);
+      border: 1px solid var(--border);
+    }
+
+    .btn-secondary:hover {
+      background: var(--bg-card);
+      border-color: var(--border-bright);
+    }
+
+    /* Status Message */
+    .status-message {
+      padding: 16px 20px;
+      border-radius: 6px;
+      margin-top: 16px;
+      font-weight: 700;
+      font-size: 13px;
+      letter-spacing: 0.5px;
+      display: none;
+      align-items: center;
+      gap: 10px;
+      border: 2px solid;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .status-message::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 4px;
+      height: 100%;
+      background: currentColor;
+      box-shadow: 0 0 10px currentColor;
+    }
+
+    .status-message.show { display: flex; animation: slideIn 0.3s ease-out; }
+
+    @keyframes slideIn {
+      from { transform: translateX(-20px); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+
+    .status-scanning { 
+      background: rgba(0, 217, 255, 0.1); 
+      color: var(--cyber-secondary); 
+      border-color: var(--cyber-secondary);
+    }
+    .status-complete { 
+      background: rgba(0, 255, 136, 0.1); 
+      color: var(--success); 
+      border-color: var(--success);
+    }
+    .status-error { 
+      background: rgba(255, 51, 102, 0.1); 
+      color: var(--danger); 
+      border-color: var(--danger);
+    }
+
+    /* Results Section */
+    .results-container {
+      margin-top: 24px;
+    }
+
+    .results-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+
+    .stat-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-bright);
+      border-radius: 8px;
+      padding: 20px;
+      text-align: center;
+      animation: scaleIn 0.5s ease-out;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .stat-card::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: var(--cyber-primary);
+      transform: scaleX(0);
+      transition: transform 0.3s;
+    }
+
+    .stat-card:hover::after {
+      transform: scaleX(1);
+    }
+
+    .stat-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(0, 255, 136, 0.15);
+    }
+
+    .stat-number {
+      font-size: 32px;
+      font-weight: 800;
+      color: var(--cyber-primary);
+      margin-bottom: 8px;
+      text-shadow: 0 0 10px rgba(0, 255, 136, 0.3);
+    }
+
+    .stat-label {
+      font-size: 13px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* Email Cards */
+    .email-card {
+      background: var(--bg-card);
+      padding: 24px;
+      border-radius: 8px;
+      margin-bottom: 16px;
+      border-left: 4px solid transparent;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      border: 1px solid var(--border-subtle);
+      position: relative;
+      animation: slideUp 0.4s ease-out;
+    }
+
+    .email-card::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      border-radius: 8px;
+      opacity: 0;
+      transition: opacity 0.3s;
+      pointer-events: none;
+    }
+
+    .email-card:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-card);
+      border-color: var(--border-bright);
+    }
+
+    /* Mobile Responsive */
+    @media (max-width: 1200px) {
+      .sidebar { width: 240px; }
+      .main-content { margin-left: 240px; padding: 24px 32px; }
+    }
+
+    @media (max-width: 768px) {
+      .sidebar {
+        position: fixed;
+        left: -280px;
+        transition: left 0.3s ease;
+        z-index: 1000;
+      }
+
+      .sidebar.mobile-open { left: 0; }
+
+      .main-content {
+        margin-left: 0;
+        padding: 20px 16px;
+      }
+
+      .tab-navigation {
+        gap: 4px;
+        margin-bottom: 20px;
+      }
+
+      .tab-btn {
+        padding: 10px 16px;
+        font-size: 11px;
+      }
+
+      .scan-card {
+        padding: 24px 20px;
+        margin-bottom: 16px;
+      }
+
+      .button-group {
+        flex-direction: column;
+      }
+
+      .stat-card {
+        min-width: 100%;
+      }
+
+      .toast-container {
+        top: 16px;
+        right: 16px;
+        left: 16px;
+        max-width: none;
+      }
+    }
+
+    .email-card.safe { 
+      border-left-color: var(--success); 
+    }
+    .email-card.safe:hover::after {
+      box-shadow: inset 0 0 30px rgba(0, 255, 136, 0.1);
+      opacity: 1;
+    }
+    
+    .email-card.suspicious { 
+      border-left-color: var(--warning); 
+    }
+    .email-card.suspicious:hover::after {
+      box-shadow: inset 0 0 30px rgba(255, 170, 0, 0.1);
+      opacity: 1;
+    }
+    
+    .email-card.danger { 
+      border-left-color: var(--danger); 
+    }
+    .email-card.danger:hover::after {
+      box-shadow: inset 0 0 30px rgba(255, 51, 102, 0.1);
+      opacity: 1;
+    }
+
+    .email-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+
+    .email-title-section { flex: 1; }
+
+    .badge {
+      padding: 6px 16px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      border: 1px solid;
+      box-shadow: 0 0 10px currentColor;
+      display: inline-block;
+      margin-bottom: 10px;
+    }
+
+    .badge.safe { 
+      background: rgba(0, 255, 136, 0.15); 
+      color: var(--success); 
+      border-color: var(--success);
+    }
+    .badge.suspicious { 
+      background: rgba(255, 170, 0, 0.15); 
+      color: var(--warning); 
+      border-color: var(--warning);
+    }
+    .badge.danger { 
+      background: rgba(255, 51, 102, 0.15); 
+      color: var(--danger); 
+      border-color: var(--danger);
+    }
+
+    .email-subject {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+    }
+
+    .risk-badge {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 80px;
+      height: 80px;
+      border-radius: 8px;
+      background: rgba(0, 255, 136, 0.05);
+      border: 2px solid var(--cyber-primary);
+      font-weight: 800;
+      font-size: 28px;
+      box-shadow: 0 0 20px rgba(0, 255, 136, 0.2), inset 0 0 20px rgba(0, 255, 136, 0.1);
+      color: var(--cyber-primary);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .risk-badge::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: conic-gradient(from 0deg, transparent, rgba(0, 255, 136, 0.2), transparent 30deg);
+      animation: rotateBadge 4s linear infinite;
+    }
+
+    @keyframes rotateBadge {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .email-metadata {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      padding: 16px 0;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      margin: 16px 0;
+    }
+
+    .meta-item {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .meta-label {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
+    }
+
+    .meta-value {
+      font-size: 14px;
+      color: var(--text-primary);
+      word-break: break-word;
+    }
+
+    .urls-section, .attachments-section {
+      margin-top: 16px;
+    }
+
+    .section-title {
+      font-weight: 700;
+      margin-bottom: 12px;
+      color: var(--text-primary);
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .url-item, .attachment-item {
+      background: rgba(0, 255, 136, 0.05);
+      padding: 10px 14px;
+      border-radius: 4px;
+      margin: 6px 0;
+      font-size: 12px;
+      font-family: "JetBrains Mono", "Courier New", monospace;
+      border-left: 3px solid var(--cyber-primary);
+      word-break: break-all;
+      transition: all 0.3s ease;
+    }
+
+    .url-item {
+      color: var(--cyber-secondary);
+    }
+
+    .url-item:hover {
+      background: rgba(0, 255, 136, 0.1);
+      padding-left: 18px;
+      box-shadow: inset 0 0 10px rgba(0, 255, 136, 0.1);
+    }
+
+    .attachment-item {
+      color: #818cf8;
+      border-left-color: #818cf8;
+    }
+
+    /* Empty State */
+    .empty-state {
+      text-align: center;
+      padding: 80px 40px;
+      color: var(--text-muted);
+    }
+
+    .empty-icon {
+      font-size: 64px;
+      margin-bottom: 20px;
+    }
+
+    .empty-title {
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: var(--text-secondary);
+    }
+
+    .empty-text {
+      font-size: 14px;
+      margin-bottom: 24px;
+    }
+
+    /* History View */
+    .history-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 20px;
+    }
+
+    .history-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-bright);
+      border-radius: 8px;
+      padding: 20px;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      animation: scaleIn 0.5s ease-out;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .history-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--cyber-primary), transparent);
+      transform: translateX(-100%);
+      transition: transform 0.6s;
+    }
+
+    .history-card:hover::before {
+      transform: translateX(100%);
+    }
+
+    .history-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-card), 0 0 20px rgba(0, 255, 136, 0.2);
+      border-color: var(--cyber-primary);
+    }
+
+    .history-date {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+
+    .history-email {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 12px;
+      word-break: break-all;
+    }
+
+    .history-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 12px;
+      padding-top: 12px;
+      border-top: 1px solid var(--border);
+    }
+
+    .history-stat {
+      text-align: center;
+      font-size: 12px;
+    }
+
+    .history-stat-value {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .history-stat-label {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    /* Loading Animation */
+    .spinner {
+      display: inline-block;
+      width: 14px;
+      height: 14px;
+      border: 2.5px solid rgba(255, 255, 255, 0.3);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    /* Animations */
+    @keyframes slideInLeft {
+      from { transform: translateX(-100%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+
+    @keyframes slideDown {
+      from { transform: translateY(-20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    @keyframes slideUp {
+      from { transform: translateY(20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    @keyframes scaleIn {
+      from { transform: scale(0.95); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    /* Loading Spinner */
+    .spinner {
+      display: inline-block;
+      width: 18px;
+      height: 18px;
+      border: 3px solid rgba(255, 255, 255, 0.2);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin-left: 8px;
+      vertical-align: middle;
+    }
+
+    /* Floating Action Button - Bottom Left */
+    .floating-btn {
+      position: fixed;
+      bottom: 32px;
+      left: 32px;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+      color: white;
+      border: 2px solid white;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      box-shadow: 0 4px 16px rgba(59, 130, 246, 0.5), 0 0 24px rgba(59, 130, 246, 0.3);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      z-index: 9999;
+      outline: none;
+    }
+
+    .floating-btn:hover {
+      transform: scale(1.1) translateY(-4px);
+      box-shadow: 0 8px 20px rgba(59, 130, 246, 0.6), 0 0 30px rgba(59, 130, 246, 0.3);
+    }
+
+    .floating-btn:active {
+      transform: scale(0.95);
+    }
+
+    .floating-btn-tooltip {
+      position: absolute;
+      left: 80px;
+      bottom: 15px;
+      background: var(--bg-card);
+      color: var(--text-primary);
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      white-space: nowrap;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s;
+      border: 1px solid var(--border);
+    }
+
+    .floating-btn:hover .floating-btn-tooltip {
+      opacity: 1;
+    }
+
+    /* Toast Notifications */
+    .toast-container {
+      position: fixed;
+      top: 24px;
+      right: 24px;
+      z-index: 10000;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      max-width: 400px;
+    }
+
+    .toast {
+      background: var(--bg-card);
+      border: 2px solid var(--border-bright);
+      border-radius: 12px;
+      padding: 16px 20px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4),
+                  0 0 20px rgba(0, 255, 136, 0.3);
+      animation: slideInRight 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .toast::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 4px;
+    }
+
+    .toast.success::before { background: var(--status-safe); }
+    .toast.error::before { background: var(--status-danger); }
+    .toast.warning::before { background: var(--status-warning); }
+    .toast.info::before { background: var(--cyber-secondary); }
+
+    .toast-content {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: var(--text-primary);
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .toast-icon {
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+
+    @keyframes slideInRight {
+      from {
+        transform: translateX(400px);
+        opacity: 0;
+      }
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+
+    @keyframes slideOutRight {
+      from {
+        transform: translateX(0);
+        opacity: 1;
+      }
+      to {
+        transform: translateX(400px);
+        opacity: 0;
+      }
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-5px); }
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+        padding: 16px;
+        margin-bottom: 20px;
+      }
+
+      .main-content { margin-left: 0; padding: 24px; }
+
+      .form-grid { grid-template-columns: 1fr; }
+
+      .history-grid { grid-template-columns: 1fr; }
+
+      .email-header { flex-direction: column; }
+
+      .risk-badge { width: 60px; height: 60px; font-size: 22px; }
+    }
+
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: rgba(15, 23, 42, 0.5);
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--primary);
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--primary-dark);
+    }
+  </style>
+</head>
+<body>
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- Sidebar Navigation -->
+  <div class="sidebar">
+    <div class="sidebar-header">
+      <!-- Professional Shield Logo -->
+      <div class="sidebar-logo">
+        <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:block;margin:0 auto;">
+          <defs>
+            <linearGradient id="shieldGradient" x1="0" y1="0" x2="48" y2="48" gradientUnits="userSpaceOnUse">
+              <stop stop-color="#3b82f6"/>
+              <stop offset="1" stop-color="#2563eb"/>
+            </linearGradient>
+          </defs>
+          <path d="M24 4L24 4C30 4 40 7 40 13V24C40 33 24 42 24 42C24 42 8 33 8 24V13C8 7 18 4 24 4Z" fill="url(#shieldGradient)" opacity="0.9"/>
+          <path d="M24 4L24 4C30 4 40 7 40 13V24C40 33 24 42 24 42C24 42 8 33 8 24V13C8 7 18 4 24 4Z" stroke="#3b82f6" stroke-width="1.5" fill="none"/>
+          <path d="M18 24L22 28L30 18" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="sidebar-title">ScanBox Platform</div>
+    </div>
+    
+    <nav style="padding: 12px 0;">
+      <div class="nav-item active" onclick="switchTab('scanner')">
+        Scanner
+      </div>
+      <div class="nav-item" onclick="switchTab('analytics')">
+        Analytics
+      </div>
+      <div class="nav-item" onclick="switchTab('scheduler')">
+        Scheduler
+      </div>
+      <div class="nav-item" onclick="switchTab('history')">
+        History
+      </div>
+      <div class="nav-item" onclick="switchTab('bulk')">
+        Bulk Scan
+      </div>
+      <div class="nav-item" onclick="switchTab('admin')">
+        Admin
+      </div>
+      <div class="nav-item" onclick="switchTab('reports')">
+        Reports
+      </div>
+      <div class="nav-item" onclick="switchTab('policies')">
+        Policies
+      </div>
+      <div class="nav-item" onclick="switchTab('tenants')">
+        Tenants
+      </div>
+      <div class="nav-item" onclick="switchTab('settings')">
+        Settings
+      </div>
+      <div class="nav-item" id="loginNavBtn" onclick="showLogin()" style="margin-top: 20px; border-top: 1px solid var(--border); padding-top: 12px;">
+        <span id="loginNavText">Login</span>
+      </div>
+    </nav>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <div class="container">
+      <!-- Header Bar -->
+      <div class="header-bar">
+        <div class="header-title">
+          <h1 id="pageTitle">Email Scanner</h1>
+          <p id="pageSubtitle" class="header-subtitle">Scan and analyze your emails for security threats</p>
+        </div>
+        <div class="header-actions">
+          <div id="userInfo" style="display: none;">
+            <span class="user-email" id="userEmail"></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Scanner Tab -->
+      <div id="scanner-tab" class="tab-view active">
+        <div class="scan-card">
+          <div class="scan-header">
+            <div class="scan-title">Email Security Scan</div>
+            <div class="scan-subtitle">Advanced phishing & malware detection for your Gmail inbox</div>
+          </div>
+
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="gmail">Gmail Address</label>
+              <input id="gmail" type="email" placeholder="yourname@gmail.com" autocomplete="email" />
+            </div>
+
+            <div class="form-group">
+              <label for="app_password">App Password</label>
+              <input id="app_password" type="password" placeholder="xxxx xxxx xxxx xxxx" autocomplete="off" />
+            </div>
+          </div>
+
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="limit">Emails to Scan</label>
+              <input id="limit" type="number" value="20" min="1" max="100" />
+            </div>
+
+            <div class="form-group">
+              <label>&nbsp;</label>
+              <div style="display: flex; gap: 8px; align-items: flex-end;">
+                <span style="font-size: 12px; color: var(--text-muted);">💡 <a href="https://support.google.com/accounts/answer/185833" target="_blank" style="color: var(--primary); text-decoration: none;">Generate App Password</a></span>
+              </div>
+            </div>
+          </div>
+
+          <div class="button-group">
+            <button class="btn-scan" id="scanBtn" onclick="scan()">
+              <span id="btnText">Scan Now</span>
+              <span id="btnLoader" style="display: none;" class="spinner"></span>
+            </button>
+            <button class="btn-secondary" onclick="clearForm()">Clear</button>
+          </div>
+
+          <div id="status" class="status-message"></div>
+        </div>
+
+        <!-- Results Section -->
+        <div id="results-container" class="results-container" style="display: none;">
+          <div class="results-stats" id="resultStats"></div>
+          <div id="results" class="results"></div>
+        </div>
+      </div>
+
+      <!-- Analytics Tab -->
+      <div id="analytics-tab" class="tab-view">
+        <div style="margin-bottom: 20px;">
+          <h2 style="font-size: 24px; font-weight: 700; margin-bottom: 8px;">Analytics Dashboard</h2>
+          <p style="color: var(--text-secondary);">Threat trends, risk distribution, and key metrics</p>
+        </div>
+        <div id="analyticsContent" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
+          <div class="stat-card" style="text-align: left;">
+            <div style="font-size: 18px; font-weight: 700; margin-bottom: 16px;">📈 Daily Statistics</div>
+            <div id="dailyStats"></div>
+          </div>
+          <div class="stat-card" style="text-align: left;">
+            <div style="font-size: 18px; font-weight: 700; margin-bottom: 16px;">Risk Distribution</div>
+            <div id="riskDistribution"></div>
+          </div>
+          <div class="stat-card" style="text-align: left;">
+            <div style="font-size: 18px; font-weight: 700; margin-bottom: 16px;">🎯 Top Threats</div>
+            <div id="topThreats"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Scheduler Tab -->
+      <div id="scheduler-tab" class="tab-view">
+        <div style="margin-bottom: 20px;">
+          <h2 style="font-size: 24px; font-weight: 700; margin-bottom: 8px;">Email Scan Scheduler</h2>
+          <p style="color: var(--text-secondary);">Setup automated recurring email scans</p>
+        </div>
+        
+        <div class="scan-card">
+          <div style="margin-bottom: 24px;">
+            <h3 style="font-size: 18px; font-weight: 700; margin-bottom: 16px;">Create New Schedule</h3>
+          </div>
+
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="sched_gmail">Gmail Account</label>
+              <input id="sched_gmail" type="email" placeholder="yourname@gmail.com" />
+            </div>
+
+            <div class="form-group">
+              <label for="sched_password">App Password</label>
+              <input id="sched_password" type="password" placeholder="xxxx xxxx xxxx xxxx" />
+            </div>
+
+            <div class="form-group">
+              <label for="sched_frequency">Frequency</label>
+              <select id="sched_frequency">
+                <option value="daily">Daily</option>
+                <option value="weekly">Weekly</option>
+                <option value="monthly">Monthly</option>
+                <option value="every_2_hours">Every 2 Hours</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="button-group">
+            <button class="btn-scan" onclick="createSchedule()">Create Schedule</button>
+            <button class="btn-secondary" onclick="clearScheduleForm()">Clear</button>
+          </div>
+
+          <div id="schedStatus" class="status-message"></div>
+        </div>
+
+        <div style="margin-top: 32px;">
+          <h3 style="font-size: 18px; font-weight: 700; margin-bottom: 16px;">Active Schedules</h3>
+          <div id="schedulesList"></div>
+        </div>
+      </div>
+
+      <!-- History Tab -->
+      <div id="history-tab" class="tab-view">
+        <div style="margin-bottom: 20px;">
+          <h2 style="font-size: 24px; font-weight: 700; margin-bottom: 8px;">Scan History</h2>
+          <p style="color: var(--text-secondary);">View all previous scans and their results</p>
+        </div>
+        <div class="history-grid" id="historyGrid"></div>
+      </div>
+
+      <!-- Statistics Tab -->
+      <div id="stats-tab" class="tab-view">
+        <div style="margin-bottom: 20px;">
+          <h2 style="font-size: 24px; font-weight: 700; margin-bottom: 8px;">Statistics</h2>
+          <p style="color: var(--text-secondary);">Overview of your email security</p>
+        </div>
+        <div id="statsContent"></div>
+      </div>
+
+      <!-- Settings Tab -->
+      <div id="settings-tab" class="tab-view">
+        <div style="margin-bottom: 20px;">
+          <h2 style="font-size: 24px; font-weight: 700; margin-bottom: 8px;">Settings</h2>
+          <p style="color: var(--text-secondary);">Account settings and integrations</p>
+        </div>
+
+        <div class="scan-card">
+          <div style="margin-bottom: 24px;">
+            <h3 style="font-size: 18px; font-weight: 700; margin-bottom: 16px;">Authentication</h3>
+          </div>
+
+          <div id="authSection"></div>
+        </div>
+
+        <!-- Slack integration removed per user request -->
+      </div>
+
+      <!-- Bulk Scan Tab -->
+      <!-- Bulk Scan Tab -->
+      <div id="bulk-tab" class="tab-view" style="display:none;">
+        <div class="scan-card">
+          <div class="scan-header">
+            <div class="scan-title">Bulk Email Scan</div>
+            <div class="scan-subtitle">Upload multiple email files (.eml) for enterprise-grade scanning</div>
+          </div>
+          <form id="bulkScanForm" enctype="multipart/form-data">
+            <div class="form-group">
+              <label for="bulkEmails">Upload Email Files</label>
+              <input id="bulkEmails" name="emails" type="file" multiple accept=".eml" />
+            </div>
+            <button class="btn-scan" type="submit">Start Bulk Scan</button>
+          </form>
+          <div id="bulkScanResults" style="margin-top:24px;"></div>
+        </div>
+      </div>
+
+      <!-- Admin Dashboard Tab -->
+      <!-- Admin Dashboard Tab -->
+      <div id="admin-tab" class="tab-view" style="display:none;">
+        <div class="scan-card">
+          <div class="scan-header">
+            <div class="scan-title">Admin Dashboard</div>
+            <div class="scan-subtitle">User management, audit logs, and system overview</div>
+          </div>
+          
+          <!-- Admin Stats Cards -->
+          <div id="adminStats" style="margin-bottom: 32px;"></div>
+          
+          <!-- User Management Section -->
+          <div style="margin-bottom: 32px;">
+            <h3 style="font-size: 18px; font-weight: 700; margin-bottom: 16px; color: var(--cyber-primary);">User Management</h3>
+            <div id="userList"></div>
+          </div>
+          
+          <!-- Audit Logs Section -->
+          <div>
+            <h3 style="font-size: 18px; font-weight: 700; margin-bottom: 16px; color: var(--cyber-primary);">Audit Logs (Last 50)</h3>
+            <div id="auditLogs"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Reports Tab -->
+      <div id="reports-tab" class="tab-view" style="display:none;">
+        <div class="scan-card">
+          <div class="scan-header">
+            <div class="scan-title">Automated Reporting</div>
+            <div class="scan-subtitle">Generate and schedule PDF/CSV reports</div>
+          </div>
+          <button class="btn-scan" onclick="downloadCSVReport()">Download CSV Report (Last 7 Days)</button>
+          <div id="reportSummary" style="margin-top:24px;"></div>
+        </div>
+      </div>
+
+      <!-- Policies Tab -->
+      <div id="policies-tab" class="tab-view" style="display:none;">
+        <div class="scan-card">
+          <div class="scan-header">
+            <div class="scan-title">Custom Policy Engine</div>
+            <div class="scan-subtitle">Set block/allow rules and compliance policies</div>
+          </div>
+          <form id="policyForm">
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="policyName">Policy Name</label>
+                <input id="policyName" type="text" placeholder="Block suspicious domains" />
+              </div>
+              <div class="form-group">
+                <label for="policyType">Type</label>
+                <select id="policyType">
+                  <option value="sender_domain">Sender Domain</option>
+                  <option value="subject_keyword">Subject Keyword</option>
+                  <option value="risk_level">Risk Level</option>
+                  <option value="attachment_extension">Attachment Extension</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="policyRule">Rule Value</label>
+                <input id="policyRule" type="text" placeholder="example.com" />
+              </div>
+              <div class="form-group">
+                <label for="policyAction">Action</label>
+                <select id="policyAction">
+                  <option value="block">Block</option>
+                  <option value="quarantine">Quarantine</option>
+                  <option value="flag">Flag</option>
+                </select>
+              </div>
+            </div>
+            <button class="btn-scan" type="submit">Create Policy</button>
+          </form>
+          <div id="policyList" style="margin-top:24px;"></div>
+        </div>
+      </div>
+
+      <!-- Tenants Tab -->
+      <div id="tenants-tab" class="tab-view" style="display:none;">
+        <div class="scan-card">
+          <div class="scan-header">
+            <div class="scan-title">Multi-Tenant Management</div>
+            <div class="scan-subtitle">Manage multiple clients and organizations</div>
+          </div>
+          <form id="tenantForm">
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="tenantName">Tenant Name</label>
+                <input id="tenantName" type="text" placeholder="Acme Corporation" />
+              </div>
+              <div class="form-group">
+                <label for="tenantDomain">Domain</label>
+                <input id="tenantDomain" type="text" placeholder="acme.com" />
+              </div>
+            </div>
+            <button class="btn-scan" type="submit">Create Tenant</button>
+          </form>
+          <div id="tenantList" style="margin-top:24px;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const API_URL = "http://127.0.0.1:5000";
+    let accessToken = localStorage.getItem('accessToken');
+
+    // Toast Notification System
+    function showToast(message, type = 'info', duration = 3000) {
+      const container = document.getElementById('toastContainer');
+      const toast = document.createElement('div');
+      toast.className = `toast ${type}`;
+      
+      const icons = {
+        success: '✓',
+        error: '×',
+        warning: '!',
+        info: 'i'
+      };
+      
+      toast.innerHTML = `
+        <div class="toast-content">
+          <span class="toast-icon">${icons[type] || icons.info}</span>
+          <span>${escapeHtml(message)}</span>
+        </div>
+      `;
+      
+      container.appendChild(toast);
+      
+      setTimeout(() => {
+        toast.style.animation = 'slideOutRight 0.3s ease-out';
+        setTimeout(() => toast.remove(), 300);
+      }, duration);
+    }
+
+    // Escape HTML to prevent XSS
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    // Check authentication on load
+    window.addEventListener("load", async () => {
+      document.querySelector('.nav-item').classList.add('active');
+      document.querySelector('.tab-btn').classList.add('active');
+      
+      // Update login button state
+      updateLoginButton();
+      
+      // Check if user is logged in
+      if (!accessToken) {
+        showAuthForm();
+      } else {
+        updateAuthUI();
+      }
+    });
+
+    // Authentication Functions
+    function showAuthForm() {
+      const authSection = document.getElementById('authSection');
+      authSection.innerHTML = `
+        <div class="form-group" style="margin-bottom: 16px;">
+          <label for="auth_email">Email</label>
+          <input id="auth_email" type="email" placeholder="yourname@example.com" />
+        </div>
+        <div class="form-group" style="margin-bottom: 16px;">
+          <label for="auth_password">Password</label>
+          <input id="auth_password" type="password" placeholder="Your password" />
+        </div>
+        <div class="button-group">
+          <button class="btn-scan" onclick="loginUser()">🔓 Login</button>
+          <button class="btn-secondary" onclick="registerUser()">📝 Register</button>
+        </div>
+        <div id="authStatus" class="status-message"></div>
+      `;
+    }
+
+    function updateAuthUI() {
+      const authSection = document.getElementById('authSection');
+      const userInfo = document.getElementById('userInfo');
+      const userEmailSpan = document.getElementById('userEmail');
+      
+      authSection.innerHTML = `
+        <div style="padding: 16px; background: rgba(16, 185, 129, 0.1); border-radius: 8px; border-left: 3px solid var(--success);">
+          <div style="font-weight: 600; color: var(--success); margin-bottom: 8px;">You are logged in</div>
+          <div style="font-size: 13px; color: var(--text-secondary); margin-bottom: 16px;">Session is active and all features are available.</div>
+          <button class="btn-secondary" onclick="logoutUser()">Logout</button>
+        </div>
+      `;
+      
+      // Show user email in header
+      if (userInfo && userEmailSpan) {
+        const email = localStorage.getItem('userEmail') || 'User';
+        userEmailSpan.textContent = email;
+        userInfo.style.display = 'flex';
+      }
+    }
+
+    async function loginUser() {
+      const email = document.getElementById('auth_email').value;
+      const password = document.getElementById('auth_password').value;
+      const statusDiv = document.getElementById('authStatus');
+
+      if (!email || !password) {
+        showStatus(statusDiv, '⚠️ Please enter email and password', 'error');
+        return;
+      }
+
+      try {
+        const res = await fetch(`${API_URL}/api/auth/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
+        });
+
+        const data = await res.json();
+
+        if (!res.ok || data.error) {
+          showStatus(statusDiv, data.error || 'Login failed', 'error');
+          return;
+        }
+
+        accessToken = data.access_token;
+        localStorage.setItem('accessToken', accessToken);
+        localStorage.setItem('userEmail', email);
+        updateLoginButton();
+        showStatus(statusDiv, 'Login successful', 'complete');
+        
+        setTimeout(() => {
+          updateAuthUI();
+        }, 1000);
+      } catch (e) {
+        showStatus(statusDiv, `Error: ${e.message}`, 'error');
+      }
+    }
+
+    async function registerUser() {
+      const email = document.getElementById('auth_email').value;
+      const password = document.getElementById('auth_password').value;
+      const statusDiv = document.getElementById('authStatus');
+
+      if (!email || !password) {
+        showStatus(statusDiv, '⚠️ Please enter email and password', 'error');
+        return;
+      }
+
+      try {
+        const res = await fetch(`${API_URL}/api/auth/register`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
+        });
+
+        const data = await res.json();
+
+        if (!res.ok || data.error) {
+          showStatus(statusDiv, data.error || 'Registration failed', 'error');
+          return;
+        }
+
+        showStatus(statusDiv, 'Registration successful! Please login.', 'complete');
+        setTimeout(() => {
+          document.getElementById('auth_email').value = email;
+          document.getElementById('auth_password').value = password;
+          loginUser();
+        }, 1500);
+      } catch (e) {
+        showStatus(statusDiv, `Error: ${e.message}`, 'error');
+      }
+    }
+
+    function logoutUser() {
+      accessToken = null;
+      localStorage.removeItem('accessToken');
+      localStorage.removeItem('userEmail');
+      const userInfo = document.getElementById('userInfo');
+      if (userInfo) userInfo.style.display = 'none';
+      updateLoginButton();
+      showAuthForm();
+      switchTab('scanner');
+    }
+
+    function updateLoginButton() {
+      const loginBtn = document.getElementById('loginNavBtn');
+      const loginText = document.getElementById('loginNavText');
+      if (accessToken) {
+        loginText.textContent = 'Logout';
+        loginBtn.onclick = logoutUser;
+      } else {
+        loginText.textContent = 'Login';
+        loginBtn.onclick = showLogin;
+      }
+    }
+
+    function showLogin() {
+      if (accessToken) {
+        logoutUser();
+      } else {
+        switchTab('settings');
+        showAuthForm();
+      }
+    }
+
+    // Analytics Functions
+    async function loadAnalytics() {
+      if (!accessToken) {
+        document.getElementById('analyticsContent').innerHTML = '<div style="text-align: center; color: var(--danger);">Please login to view analytics</div>';
+        return;
+      }
+
+      try {
+        const [trendsRes, distRes, threatsRes, dailyRes] = await Promise.all([
+          fetch(`${API_URL}/api/analytics/trends?days=30`, { headers: { 'Authorization': `Bearer ${accessToken}` } }),
+          fetch(`${API_URL}/api/analytics/distribution`, { headers: { 'Authorization': `Bearer ${accessToken}` } }),
+          fetch(`${API_URL}/api/analytics/threats?limit=5`, { headers: { 'Authorization': `Bearer ${accessToken}` } }),
+          fetch(`${API_URL}/api/analytics/daily`, { headers: { 'Authorization': `Bearer ${accessToken}` } })
+        ]);
+
+        const trends = await trendsRes.json();
+        const dist = await distRes.json();
+        const threats = await threatsRes.json();
+        const daily = await dailyRes.json();
+
+        // Daily stats
+        if (daily.success && daily.statistics) {
+          const stats = daily.statistics;
+          document.getElementById('dailyStats').innerHTML = `
+            <div style="font-size: 13px; display: grid; gap: 8px;">
+              <div>Total Scans: <strong>${stats.total_scans || 0}</strong></div>
+              <div>Safe: <strong style="color: var(--success);">${stats.safe_emails || 0}</strong></div>
+              <div>Suspicious: <strong style="color: var(--warning);">${stats.suspicious_emails || 0}</strong></div>
+              <div>🔴 Dangerous: <strong style="color: var(--danger);">${stats.dangerous_emails || 0}</strong></div>
+            </div>
+          `;
+        }
+
+        // Risk distribution
+        if (dist.success && dist.distribution) {
+          const d = dist.distribution;
+          document.getElementById('riskDistribution').innerHTML = `
+            <div style="font-size: 13px; display: grid; gap: 8px;">
+              <div>🔴 Critical: <strong>${d.critical || 0}</strong></div>
+              <div>🟠 High: <strong>${d.high || 0}</strong></div>
+              <div>🟡 Medium: <strong>${d.medium || 0}</strong></div>
+              <div>🟢 Low: <strong>${d.low || 0}</strong></div>
+              <div>💚 Minimal: <strong>${d.minimal || 0}</strong></div>
+            </div>
+          `;
+        }
+
+        // Top threats
+        if (threats.success && threats.threats) {
+          const threatsList = threats.threats.slice(0, 5).map(t => 
+            `<div style="font-size: 13px; padding: 6px 0;">🎯 ${t.type}: <strong>${t.count}</strong></div>`
+          ).join('');
+          document.getElementById('topThreats').innerHTML = threatsList || '<div style="color: var(--text-muted);">No threats detected</div>';
+        }
+      } catch (e) {
+        document.getElementById('analyticsContent').innerHTML = `<div style="text-align: center; color: var(--danger);">Error loading analytics: ${e.message}</div>`;
+      }
+    }
+
+    // Scheduler Functions
+    async function createSchedule() {
+      if (!accessToken) {
+        showStatus(document.getElementById('schedStatus'), '⚠️ Please login first', 'error');
+        return;
+      }
+
+      const gmail = document.getElementById('sched_gmail').value;
+      const password = document.getElementById('sched_password').value;
+      const frequency = document.getElementById('sched_frequency').value;
+      const statusDiv = document.getElementById('schedStatus');
+
+      if (!gmail || !password) {
+        showStatus(statusDiv, '⚠️ Please enter Gmail and password', 'error');
+        return;
+      }
+
+      try {
+        const res = await fetch(`${API_URL}/api/scheduler/create`, {
+          method: 'POST',
+          headers: { 
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${accessToken}`
+          },
+          body: JSON.stringify({ gmail_account: gmail, app_password: password, frequency })
+        });
+
+        const data = await res.json();
+
+        if (!res.ok || !data.success) {
+          showStatus(statusDiv, `❌ ${data.error || 'Failed to create schedule'}`, 'error');
+          return;
+        }
+
+        showStatus(statusDiv, '✅ Schedule created successfully!', 'complete');
+        clearScheduleForm();
+        loadSchedules();
+      } catch (e) {
+        showStatus(statusDiv, `❌ Error: ${e.message}`, 'error');
+      }
+    }
+
+    async function loadSchedules() {
+      if (!accessToken) return;
+
+      try {
+        const res = await fetch(`${API_URL}/api/scheduler/list`, {
+          headers: { 'Authorization': `Bearer ${accessToken}` }
+        });
+
+        const data = await res.json();
+        const schedules = data.schedules || [];
+        const list = document.getElementById('schedulesList');
+
+        if (schedules.length === 0) {
+          list.innerHTML = '<div style="text-align: center; color: var(--text-muted); padding: 40px;">No schedules created yet</div>';
+          return;
+        }
+
+        list.innerHTML = schedules.map((s, idx) => `
+          <div class="email-card">
+            <div style="display: flex; justify-content: space-between; align-items: start; gap: 16px;">
+              <div style="flex: 1;">
+                <div style="font-weight: 600; color: var(--text-primary); margin-bottom: 8px;">
+                  📧 ${escapeHtml(s.gmail_account)}
+                </div>
+                <div style="font-size: 13px; color: var(--text-secondary);">
+                  Frequency: <strong>${s.frequency}</strong>
+                </div>
+                <div style="font-size: 13px; color: var(--text-secondary);">
+                  ⏱️ Next Scan: <strong>${formatDate(s.next_scan)}</strong>
+                </div>
+              </div>
+              <button class="btn-secondary" onclick="deleteSchedule(${s.id})">🗑️ Delete</button>
+            </div>
+          </div>
+        `).join('');
+      } catch (e) {
+        console.error('Error loading schedules:', e);
+      }
+    }
+
+    async function deleteSchedule(id) {
+      if (!accessToken || !confirm('Delete this schedule?')) return;
+
+      try {
+        const res = await fetch(`${API_URL}/api/scheduler/${id}/delete`, {
+          method: 'DELETE',
+          headers: { 'Authorization': `Bearer ${accessToken}` }
+        });
+
+        if (res.ok) {
+          loadSchedules();
+        }
+      } catch (e) {
+        console.error('Error deleting schedule:', e);
+      }
+    }
+
+    function clearScheduleForm() {
+      document.getElementById('sched_gmail').value = '';
+      document.getElementById('sched_password').value = '';
+      document.getElementById('sched_frequency').value = 'daily';
+      document.getElementById('schedStatus').classList.remove('show');
+    }
+
+    // Slack integration removed from UI
+
+    // Tab Switching with auth check
+    function switchTab(tab) {
+      // Update page title and subtitle based on tab
+      const pageTitles = {
+        'scanner': { title: 'Email Scanner', subtitle: 'Scan and analyze your emails for security threats' },
+        'analytics': { title: 'Analytics Dashboard', subtitle: 'Security insights and threat trends' },
+        'scheduler': { title: 'Scheduled Scans', subtitle: 'Automate recurring security scans' },
+        'history': { title: 'Scan History', subtitle: 'View past scan results and reports' },
+        'bulk': { title: 'Bulk Scanner', subtitle: 'Scan multiple emails at once' },
+        'admin': { title: 'Admin Dashboard', subtitle: 'User management and system overview' },
+        'reports': { title: 'Reports', subtitle: 'Generate and download security reports' },
+        'policies': { title: 'Security Policies', subtitle: 'Configure security rules and policies' },
+        'tenants': { title: 'Tenant Management', subtitle: 'Manage multi-tenant configurations' },
+        'settings': { title: 'Settings', subtitle: 'Account settings and authentication' }
+      };
+      
+      const pageInfo = pageTitles[tab] || { title: 'ScanBox', subtitle: '' };
+      document.getElementById('pageTitle').textContent = pageInfo.title;
+      document.getElementById('pageSubtitle').textContent = pageInfo.subtitle;
+      
+      document.querySelectorAll('.tab-view').forEach(function(view) {
+        view.classList.remove('active');
+        view.style.display = 'none';
+      });
+      document.querySelectorAll('.tab-btn').forEach(function(btn) {
+        btn.classList.remove('active');
+      });
+      document.querySelectorAll('.nav-item').forEach(function(nav) {
+        nav.classList.remove('active');
+      });
+      
+      const targetView = document.getElementById(tab + '-tab');
+      targetView.classList.add('active');
+      targetView.style.display = '';
+      
+      // Highlight active nav item
+      const navItems = document.querySelectorAll('.nav-item');
+      navItems.forEach(item => {
+        if (item.onclick && item.onclick.toString().includes(`'${tab}'`)) {
+          item.classList.add('active');
+        }
+      });
+      
+      // Auto-load data when switching to specific tabs
+      if (tab === 'analytics' && accessToken) {
+        loadAnalytics();
+      } else if (tab === 'history') {
+        loadHistory();
+      } else if (tab === 'scheduler' && accessToken) {
+        loadSchedules();
+      } else if (tab === 'tenants' && accessToken) {
+        loadTenants();
+      } else if (tab === 'policies' && accessToken) {
+        loadPolicies();
+      } else if (tab === 'admin' && accessToken) {
+        loadAdminDashboard();
+      }
+    }
+
+    // Bulk scan form handler
+    const bulkScanForm = document.getElementById('bulkScanForm');
+    if (bulkScanForm) {
+      bulkScanForm.onsubmit = async function(e) {
+        e.preventDefault();
+        const formData = new FormData(bulkScanForm);
+        const res = await fetch('/bulk-scan', {
+          method: 'POST',
+          body: formData
+        });
+        const data = await res.json();
+        const resultsDiv = document.getElementById('bulkScanResults');
+        resultsDiv.innerHTML = '<pre>' + JSON.stringify(data.results, null, 2) + '</pre>';
+      };
+    }
+
+    // Enterprise Feature Functions
+    
+    // Download CSV Report
+    async function downloadCSVReport() {
+      const res = await fetch('/reports/csv?days=7', {
+        headers: { 'Authorization': `Bearer ${accessToken}` }
+      });
+      const blob = await res.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'scanbox_report.csv';
+      a.click();
+    }
+
+    // Policy Form Handler
+    const policyForm = document.getElementById('policyForm');
+    if (policyForm) {
+      policyForm.onsubmit = async function(e) {
+        e.preventDefault();
+        const policy = {
+          name: document.getElementById('policyName').value,
+          type: document.getElementById('policyType').value,
+          rule: document.getElementById('policyRule').value,
+          action: document.getElementById('policyAction').value
+        };
+        const res = await fetch('/policies', {
+          method: 'POST',
+          headers: { 
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${accessToken}`
+          },
+          body: JSON.stringify(policy)
+        });
+        const data = await res.json();
+        if (data.success) {
+          document.getElementById('policyName').value = '';
+          document.getElementById('policyRule').value = '';
+          loadPolicies();
+        } else {
+          showToast('Failed to create policy: ' + (data.error || 'Unknown error'), 'error');
+        }
+      };
+    }
+
+    // Load Policies
+    async function loadPolicies() {
+      if (!accessToken) return;
+      
+      const policyList = document.getElementById('policyList');
+      policyList.innerHTML = '<div style="text-align: center; color: var(--text-muted); padding: 20px;">Loading policies...</div>';
+      
+      try {
+        const res = await fetch('/policies', {
+          headers: { 'Authorization': `Bearer ${accessToken}` }
+        });
+        const data = await res.json();
+        
+        if (!data.policies || data.policies.length === 0) {
+          policyList.innerHTML = '<div style="text-align: center; color: var(--text-muted); padding: 40px;">No policies created yet. Use the form above to create your first policy.</div>';
+          return;
+        }
+        
+        policyList.innerHTML = data.policies.map(p => `
+          <div class="email-card" style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+              <div style="font-weight: 700; color: var(--cyber-primary); margin-bottom: 4px;">${escapeHtml(p.name)}</div>
+              <div style="font-size: 13px; color: var(--text-secondary);">
+                Type: <strong>${p.type}</strong> | Rule: <strong>${escapeHtml(p.rule)}</strong> → Action: <span style="color: var(--danger);">${p.action}</span>
+              </div>
+            </div>
+            <button class="btn-secondary" onclick="deletePolicy(${p.id})" style="padding: 8px 16px;">🗑️ Delete</button>
+          </div>
+        `).join('');
+      } catch (e) {
+        policyList.innerHTML = `<div style="text-align: center; color: var(--danger); padding: 20px;">Error loading policies: ${e.message}</div>`;
+      }
+    }
+
+    // Delete Policy
+    async function deletePolicy(id) {
+      const res = await fetch(`/policies/${id}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${accessToken}` }
+      });
+      loadPolicies();
+    }
+
+    // Tenant Form Handler
+    const tenantForm = document.getElementById('tenantForm');
+    if (tenantForm) {
+      tenantForm.onsubmit = async function(e) {
+        e.preventDefault();
+        const tenant = {
+          name: document.getElementById('tenantName').value,
+          domain: document.getElementById('tenantDomain').value
+        };
+        const res = await fetch('/tenants', {
+          method: 'POST',
+          headers: { 
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${accessToken}`
+          },
+          body: JSON.stringify(tenant)
+        });
+        const data = await res.json();
+        if (data.success) {
+          document.getElementById('tenantName').value = '';
+          document.getElementById('tenantDomain').value = '';
+          loadTenants();
+        } else {
+          showToast('Failed to create tenant: ' + (data.error || 'Unknown error'), 'error');
+        }
+      };
+    }
+
+    // Load Tenants
+    async function loadTenants() {
+      if (!accessToken) return;
+      
+      const tenantList = document.getElementById('tenantList');
+      tenantList.innerHTML = '<div style="text-align: center; color: var(--text-muted); padding: 20px;">Loading tenants...</div>';
+      
+      try {
+        const res = await fetch('/tenants', {
+          headers: { 'Authorization': `Bearer ${accessToken}` }
+        });
+        const data = await res.json();
+        
+        if (!data.tenants || data.tenants.length === 0) {
+          tenantList.innerHTML = '<div style="text-align: center; color: var(--text-muted); padding: 40px;">No tenants created yet. Use the form above to create your first tenant.</div>';
+          return;
+        }
+        
+        tenantList.innerHTML = data.tenants.map(t => `
+          <div class="email-card" style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+              <div style="font-weight: 700; color: var(--cyber-primary); margin-bottom: 4px;">${escapeHtml(t.name)}</div>
+              <div style="font-size: 13px; color: var(--text-secondary);">
+                🌐 Domain: <strong>${escapeHtml(t.domain)}</strong>
+              </div>
+              <div style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">
+                Created: ${formatDate(t.created_at)}
+              </div>
+            </div>
+            <button class="btn-secondary" onclick="deleteTenant(${t.id})" style="padding: 8px 16px;">🗑️ Delete</button>
+          </div>
+        `).join('');
+      } catch (e) {
+        tenantList.innerHTML = `<div style="text-align: center; color: var(--danger); padding: 20px;">Error loading tenants: ${e.message}</div>`;
+      }
+    }
+
+    // Delete Tenant
+    async function deleteTenant(id) {
+      if (!confirm('Are you sure you want to delete this tenant? This action cannot be undone.')) return;
+      
+      try {
+        const res = await fetch(`/tenants/${id}`, {
+          method: 'DELETE',
+          headers: { 'Authorization': `Bearer ${accessToken}` }
+        });
+        const data = await res.json();
+        if (data.success) {
+          showToast('Tenant deleted successfully', 'success');
+          loadTenants();
+        } else {
+          showToast('Failed to delete tenant', 'error');
+        }
+      } catch (e) {
+        showToast('Error deleting tenant: ' + e.message, 'error');
+      }
+    }
+
+    // Admin Dashboard Functions
+    async function loadAdminDashboard() {
+      if (!accessToken) return;
+      
+      await Promise.all([
+        loadAdminStats(),
+        loadUserList(),
+        loadAuditLogs()
+      ]);
+    }
+
+    async function loadAdminStats() {
+      const statsDiv = document.getElementById('adminStats');
+      statsDiv.innerHTML = '<div style="text-align: center; padding: 20px;">Loading statistics...</div>';
+      
+      try {
+        const res = await fetch('/admin/stats', {
+          headers: { 'Authorization': `Bearer ${accessToken}` }
+        });
+        const data = await res.json();
+        
+        if (!data.success) {
+          statsDiv.innerHTML = '<div style="color: var(--danger);">Failed to load stats</div>';
+          return;
+        }
+        
+        const stats = data.stats;
+        statsDiv.innerHTML = `
+          <div class="results-stats">
+            <div class="stat-card">
+              <div class="stat-number">${stats.total_users || 0}</div>
+              <div class="stat-label">Total Users</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-number" style="color: var(--cyber-primary);">${stats.active_users || 0}</div>
+              <div class="stat-label">Active Users (30d)</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-number">${stats.total_scans || 0}</div>
+              <div class="stat-label">Total Scans</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-number" style="color: var(--cyber-secondary);">${stats.scans_today || 0}</div>
+              <div class="stat-label">Scans Today</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-number" style="color: var(--danger);">${stats.total_threats || 0}</div>
+              <div class="stat-label">Threats Detected</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-number" style="color: var(--warning);">${stats.recent_activity || 0}</div>
+              <div class="stat-label">Activity (24h)</div>
+            </div>
+          </div>
+        `;
+      } catch (e) {
+        statsDiv.innerHTML = `<div style="color: var(--danger);">Error: ${e.message}</div>`;
+      }
+    }
+
+    async function loadUserList() {
+      const userListDiv = document.getElementById('userList');
+      userListDiv.innerHTML = '<div style="text-align: center; padding: 20px;">Loading users...</div>';
+      
+      try {
+        const res = await fetch('/admin/users', {
+          headers: { 'Authorization': `Bearer ${accessToken}` }
+        });
+        const data = await res.json();
+        
+        if (!data.success || !data.users || data.users.length === 0) {
+          userListDiv.innerHTML = '<div style="text-align: center; color: var(--text-muted); padding: 20px;">No users found</div>';
+          return;
+        }
+        
+        userListDiv.innerHTML = data.users.map(u => `
+          <div class="email-card" style="display: grid; grid-template-columns: 1fr auto auto; gap: 16px; align-items: center;">
+            <div>
+              <div style="font-weight: 700; color: var(--cyber-primary); margin-bottom: 4px;">
+                📧 ${escapeHtml(u.email)}
+              </div>
+              <div style="font-size: 13px; color: var(--text-secondary);">
+                Role: <span class="badge ${u.role === 'admin' ? 'danger' : 'safe'}" style="padding: 2px 8px; font-size: 10px;">${u.role || 'user'}</span> | 
+                Scans: <strong>${u.total_scans || 0}</strong> | 
+                Joined: ${formatDate(u.created_at)}
+              </div>
+              ${u.last_login ? `<div style="font-size: 12px; color: var(--text-muted);">Last login: ${formatDate(u.last_login)}</div>` : ''}
+            </div>
+            <select onchange="changeUserRole('${escapeHtml(u.email)}', this.value)" style="padding: 6px 12px; background: var(--bg-elevated); color: var(--text-primary); border: 1px solid var(--border); border-radius: 4px;">
+              <option value="user" ${u.role === 'user' ? 'selected' : ''}>User</option>
+              <option value="admin" ${u.role === 'admin' ? 'selected' : ''}>Admin</option>
+              <option value="viewer" ${u.role === 'viewer' ? 'selected' : ''}>Viewer</option>
+            </select>
+            <button class="btn-secondary" onclick="toggleUserStatus('${escapeHtml(u.email)}')" style="padding: 6px 16px;">
+              ${u.is_active ? '🔓 Active' : '🔒 Disabled'}
+            </button>
+          </div>
+        `).join('');
+      } catch (e) {
+        userListDiv.innerHTML = `<div style="color: var(--danger);">Error loading users: ${e.message}</div>`;
+      }
+    }
+
+    async function changeUserRole(email, newRole) {
+      try {
+        const res = await fetch(`/admin/users/${encodeURIComponent(email)}/role`, {
+          method: 'PUT',
+          headers: { 
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${accessToken}` 
+          },
+          body: JSON.stringify({ role: newRole })
+        });
+        const data = await res.json();
+        if (data.success) {
+          showToast('User role updated successfully', 'success');
+          loadUserList();
+        }
+      } catch (e) {
+        showToast('Error changing role: ' + e.message, 'error');
+      }
+    }
+
+    async function toggleUserStatus(email) {
+      try {
+        const res = await fetch(`/admin/users/${encodeURIComponent(email)}/toggle`, {
+          method: 'PUT',
+          headers: { 'Authorization': `Bearer ${accessToken}` }
+        });
+        const data = await res.json();
+        if (data.success) {
+          showToast('User status updated successfully', 'success');
+          loadUserList();
+        }
+      } catch (e) {
+        showToast('Error toggling user status: ' + e.message, 'error');
+      }
+    }
+
+    async function loadAuditLogs() {
+      const logsDiv = document.getElementById('auditLogs');
+      logsDiv.innerHTML = '<div style="text-align: center; padding: 20px;">Loading audit logs...</div>';
+      
+      try {
+        const res = await fetch('/admin/audit-logs?limit=50', {
+          headers: { 'Authorization': `Bearer ${accessToken}` }
+        });
+        const data = await res.json();
+        
+        if (!data.success || !data.logs || data.logs.length === 0) {
+          logsDiv.innerHTML = '<div style="text-align: center; color: var(--text-muted); padding: 20px;">No audit logs yet</div>';
+          return;
+        }
+        
+        logsDiv.innerHTML = `
+          <div style="max-height: 400px; overflow-y: auto;">
+            ${data.logs.map(log => `
+              <div class="email-card" style="padding: 12px 16px; margin-bottom: 8px;">
+                <div style="display: flex; justify-content: space-between; align-items: start; gap: 16px;">
+                  <div style="flex: 1;">
+                    <span style="color: var(--cyber-primary); font-weight: 600;">${escapeHtml(log.action)}</span>
+                    <span style="color: var(--text-secondary); margin-left: 8px;">by ${escapeHtml(log.user_email)}</span>
+                  </div>
+                  <div style="font-size: 12px; color: var(--text-muted); white-space: nowrap;">
+                    ${formatDate(log.timestamp)}
+                  </div>
+                </div>
+                ${log.details ? `<div style="font-size: 12px; color: var(--text-secondary); margin-top: 4px;">${escapeHtml(log.details)}</div>` : ''}
+                ${log.ip_address ? `<div style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">IP: ${escapeHtml(log.ip_address)}</div>` : ''}
+              </div>
+            `).join('')}
+          </div>
+        `;
+      } catch (e) {
+        logsDiv.innerHTML = `<div style="color: var(--danger);">Error loading logs: ${e.message}</div>`;
+      }
+    }
+
+    // Existing Functions (scan, history, stats)
+    async function scan() {
+      const gmail = document.getElementById("gmail").value.trim();
+      const app_password = document.getElementById("app_password").value;
+      const limit = document.getElementById("limit").value || 20;
+      const statusDiv = document.getElementById("status");
+      const resultsContainer = document.getElementById("results-container");
+      const resultsDiv = document.getElementById("results");
+      const resultStats = document.getElementById("resultStats");
+      const scanBtn = document.getElementById("scanBtn");
+      const btnText = document.getElementById("btnText");
+      const btnLoader = document.getElementById("btnLoader");
+
+      if (!gmail || !app_password) {
+        showStatus(statusDiv, "⚠️ Please enter both Gmail address and App Password", "error");
+        return;
+      }
+
+      if (!gmail.includes("@gmail.com")) {
+        showStatus(statusDiv, "⚠️ Please enter a valid Gmail address", "error");
+        return;
+      }
+
+      scanBtn.classList.add("loading");
+      scanBtn.disabled = true;
+      btnText.style.display = "none";
+      btnLoader.style.display = "inline-block";
+      resultsContainer.style.display = "none";
+      resultStats.innerHTML = "";
+      resultsDiv.innerHTML = "";
+
+      showStatus(statusDiv, "🔄 Connecting to Gmail... Scanning your emails...", "scanning");
+
+      try {
+        const res = await fetch(`${API_URL}/api/scan`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ gmail, app_password, limit: parseInt(limit) })
+        });
+
+        const data = await res.json();
+
+        scanBtn.classList.remove("loading");
+        scanBtn.disabled = false;
+        btnText.style.display = "inline-flex";
+        btnLoader.style.display = "none";
+
+        if (!res.ok || data.error) {
+          showStatus(statusDiv, `❌ Error: ${data.error || "Unknown error occurred"}`, "error");
+          return;
+        }
+
+        const results = data.results || [];
+        const stats = {
+          total: results.length,
+          safe: results.filter(r => r.risk_level === "SAFE").length,
+          suspicious: results.filter(r => r.risk_level === "SUSPICIOUS").length,
+          danger: results.filter(r => r.risk_level === "DANGER" || r.risk_level === "DANGEROUS").length
+        };
+
+        showStatus(statusDiv, `✅ Scan Complete! Analyzed ${stats.total} emails`, "complete");
+
+        if (results.length === 0) {
+          resultsContainer.style.display = "block";
+          resultsDiv.innerHTML = '<div class="empty-state"><div class="empty-icon">📭</div><div class="empty-title">No Emails Found</div></div>';
+          return;
+        }
+
+        resultsContainer.style.display = "block";
+
+        resultStats.innerHTML = `
+          <div class="stat-card">
+            <div class="stat-number">${stats.total}</div>
+            <div class="stat-label">Total Scanned</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number" style="color: var(--success);">${stats.safe}</div>
+            <div class="stat-label">Safe Emails</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number" style="color: var(--warning);">${stats.suspicious}</div>
+            <div class="stat-label">Suspicious</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number" style="color: var(--danger);">${stats.danger}</div>
+            <div class="stat-label">Dangerous</div>
+          </div>
+        `;
+
+        results.forEach((r, idx) => {
+          const riskClass = r.risk_level.toLowerCase();
+          const card = document.createElement("div");
+          card.className = `email-card ${riskClass}`;
+
+          const urlsHtml = r.urls && r.urls.length
+            ? r.urls.map(u => `<div class="url-item">🔗 ${escapeHtml(u)}</div>`).join("")
+            : '<div style="color: var(--text-muted);">✓ No URLs detected</div>';
+
+          const attachmentsHtml = r.attachments && r.attachments.length
+            ? r.attachments.map(a => `<div class="attachment-item">📎 ${escapeHtml(a.name)}</div>`).join("")
+            : '<div style="color: var(--text-muted);">✓ No attachments</div>';
+
+          const riskColor =
+            riskClass === "danger" ? "var(--danger)" :
+            riskClass === "suspicious" ? "var(--warning)" :
+            "var(--success)";
+
+          card.innerHTML = `
+            <div class="email-header">
+              <div class="email-title-section">
+                <span class="badge ${riskClass}">${r.risk_level}</span>
+                <div class="email-subject">${escapeHtml(r.subject || "(no subject)")}</div>
+              </div>
+              <div class="risk-badge" style="background: rgba(99, 102, 241, 0.1);">
+                <span style="color: ${riskColor};">${r.risk_score}</span>
+                <span style="font-size: 12px; color: var(--text-muted);">/10</span>
+              </div>
+            </div>
+            
+            <div class="email-metadata">
+              <div class="meta-item">
+                <span class="meta-label">📧 From</span>
+                <span class="meta-value">${escapeHtml(r.from || "Unknown")}</span>
+              </div>
+              <div class="meta-item">
+                <span class="meta-label">📅 Date</span>
+                <span class="meta-value">${formatDate(r.date)}</span>
+              </div>
+              <div class="meta-item">
+                <span class="meta-label">⚠️ Risk Level</span>
+                <span class="meta-value">${getRiskAnalysis(r.risk_level, r.risk_score)}</span>
+              </div>
+            </div>
+            
+            <div class="urls-section">
+              <div class="section-title">🔗 URLs Found (${r.urls ? r.urls.length : 0})</div>
+              ${urlsHtml}
+            </div>
+            
+            <div class="attachments-section">
+              <div class="section-title">📎 Attachments (${r.attachments ? r.attachments.length : 0})</div>
+              ${attachmentsHtml}
+            </div>
+          `;
+          resultsDiv.appendChild(card);
+        });
+
+      } catch (e) {
+        scanBtn.classList.remove("loading");
+        scanBtn.disabled = false;
+        btnText.style.display = "inline-flex";
+        btnLoader.style.display = "none";
+
+        console.error("Error:", e);
+        showStatus(statusDiv, `❌ Connection Error: ${e.message}. Make sure Flask is running at ${API_URL}`, "error");
+      }
+    }
+
+    async function loadHistory() {
+      const historyGrid = document.getElementById("historyGrid");
+      historyGrid.innerHTML = '<div style="text-align: center; padding: 40px; color: var(--text-muted);">Loading history...</div>';
+
+      try {
+        const res = await fetch(`${API_URL}/api/history`);
+        const data = await res.json();
+        const scans = data.scans || [];
+
+        if (scans.length === 0) {
+          historyGrid.innerHTML = '<div class="empty-state" style="grid-column: 1/-1;"><div class="empty-icon">📭</div><div class="empty-title">No History</div></div>';
+          return;
+        }
+
+        historyGrid.innerHTML = scans.map((scan, idx) => {
+          try {
+            const result = JSON.parse(scan.result_json);
+            const stats = {
+              safe: (result.emails || []).filter(e => e.risk_level === "SAFE").length,
+              suspicious: (result.emails || []).filter(e => e.risk_level === "SUSPICIOUS").length,
+              danger: (result.emails || []).filter(e => e.risk_level === "DANGER").length
+            };
+
+            return `
+              <div class="history-card">
+                <div class="history-date">🕐 ${formatDate(scan.created_at)}</div>
+                <div class="history-email">📧 ${escapeHtml(scan.scanned_email)}</div>
+                <div class="history-stats">
+                  <div class="history-stat">
+                    <div class="history-stat-value" style="color: var(--success);">${stats.safe}</div>
+                    <div class="history-stat-label">Safe</div>
+                  </div>
+                  <div class="history-stat">
+                    <div class="history-stat-value" style="color: var(--warning);">${stats.suspicious}</div>
+                    <div class="history-stat-label">Suspicious</div>
+                  </div>
+                  <div class="history-stat">
+                    <div class="history-stat-value" style="color: var(--danger);">${stats.danger}</div>
+                    <div class="history-stat-label">Danger</div>
+                  </div>
+                </div>
+              </div>
+            `;
+          } catch (e) {
+            return '';
+          }
+        }).join('');
+      } catch (e) {
+        historyGrid.innerHTML = `<div style="grid-column: 1/-1; text-align: center; color: var(--danger);">Error loading history: ${e.message}</div>`;
+      }
+    }
+
+    async function loadStats() {
+      const statsContent = document.getElementById("statsContent");
+      statsContent.innerHTML = '<div style="text-align: center; padding: 40px; color: var(--text-muted);">Loading statistics...</div>';
+
+      try {
+        const res = await fetch(`${API_URL}/api/stats`);
+        const data = await res.json();
+
+        statsContent.innerHTML = `
+          <div class="results-stats">
+            <div class="stat-card">
+              <div class="stat-number">${data.total_scans || 0}</div>
+              <div class="stat-label">Total Scans</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-number">${data.total_emails || 0}</div>
+              <div class="stat-label">Emails Scanned</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-number" style="color: var(--danger);">${data.threats_detected || 0}</div>
+              <div class="stat-label">Threats Detected</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-number" style="color: var(--success);">${data.safe_emails || 0}</div>
+              <div class="stat-label">Safe Emails</div>
+            </div>
+          </div>
+        `;
+      } catch (e) {
+        statsContent.innerHTML = `<div style="text-align: center; color: var(--danger);">Error loading statistics: ${e.message}</div>`;
+      }
+    }
+
+    function showStatus(elem, message, type) {
+      elem.textContent = message;
+      elem.className = `status-message status-${type} show`;
+    }
+
+    function escapeHtml(text) {
+      const div = document.createElement("div");
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    function formatDate(dateStr) {
+      if (!dateStr) return "Unknown";
+      try {
+        const date = new Date(dateStr);
+        return date.toLocaleDateString() + " " + date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+      } catch {
+        return dateStr;
+      }
+    }
+
+    function getRiskAnalysis(riskLevel, riskScore) {
+      if (riskScore >= 8) return "🔴 CRITICAL";
+      if (riskScore >= 6) return "🟠 HIGH";
+      if (riskScore >= 4) return "🟡 MEDIUM";
+      if (riskScore >= 2) return "🟠 LOW";
+      return "🟢 MINIMAL";
+    }
+
+    function clearForm() {
+      document.getElementById("gmail").value = "";
+      document.getElementById("app_password").value = "";
+      document.getElementById("limit").value = "20";
+      document.getElementById("status").classList.remove("show");
+      document.getElementById("results-container").style.display = "none";
+    }
+
+    document.getElementById("app_password")?.addEventListener("keypress", e => {
+      if (e.key === "Enter") scan();
+    });
+    document.getElementById("gmail")?.addEventListener("keypress", e => {
+      if (e.key === "Enter") scan();
+    });
+  </script>
+
+  <!-- Floating Action Button -->
+  <button class="floating-btn" id="floatingBtn" title="Connect Email">
+    📧
+    <span class="floating-btn-tooltip">Connect Email Account</span>
+  </button>
+
+  <script>
+    // Floating Button Click Handler
+    document.getElementById('floatingBtn').addEventListener('click', function() {
+      // Show email account connection section
+      showPage('email-accounts');
+      // Scroll to settings
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      // Show toast
+      showToast('Navigate to Email Accounts to connect your email', 'info', 3000);
+    });
+  </script>
+</body>
+</html>
