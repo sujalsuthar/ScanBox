@@ -1,4 +1,4 @@
-# Quick Start Guide - MailShield Pro API
+# Quick Start Guide - ScanBox API
 
 ## Prerequisites
 - Python 3.7+
