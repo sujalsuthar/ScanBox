@@ -13,7 +13,7 @@ You now have a **complete AI-powered email security system** that automatically:
 
 ## 📋 ARCHITECTURE OVERVIEW
 
-### **Database Schema (NEW)**
+### **Database Schema**
 ```
 email_accounts:
 ├── id (primary key)
@@ -108,7 +108,7 @@ Body: Urgent action required immediately or your account will be locked
 
 ---
 
-## 🔌 API ENDPOINTS (NEW)
+## 🔌 API ENDPOINTS
 
 ### **1. Connect Email Account**
 ```
@@ -489,41 +489,6 @@ Click any email to see:
 - New tables: `email_accounts`, `emails`, `email_analysis`
 
 ---
-
-## 🚀 NEXT STEPS
-
-1. **Test the system:**
-   ```bash
-   python app.py
-   # Login with test@example.com / test123
-   # Go to Settings → Connect Email
-   # Enter your Gmail address & app password
-   # Click scan → See dashboard update!
-   ```
-
-2. **Add encryption:**
-   ```python
-   # Install: pip install cryptography
-   # Add encryption to email_account_manager.py
-   ```
-
-3. **Update dashboard UI:**
-   ```javascript
-   // Add auto-scan on login
-   // Display security score
-   // Show threat breakdown chart
-   // List emails with risk scores
-   ```
-
-4. **Add scheduling:**
-   ```python
-   # Scan emails every hour
-   # Use APScheduler or Celery
-   ```
-
----
-
-## 💬 WHAT YOU ACHIEVED
 
 ✅ **Real Email Integration** - Connects to Gmail, Outlook, Yahoo
 ✅ **4-Part AI Analysis** - Phishing, Malware, Sender, Urgency
